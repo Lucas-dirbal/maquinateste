@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Equipamentos - Colégio Reni Correia Gamper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div id="app" class="w-full max-w-4xl">
+
+        <!-- Tela de Login -->
+        <div id="login-screen" class="login-card p-8 w-full">
+            <div class="text-center mb-8">
+                <div id="logo-btn" class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+                    <i class="fas fa-laptop text-white text-4xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Sistema de Controle de Equipamentos</h1>
+                <p class="text-gray-600">Colégio Estadual Professora Reni Correia Gamper</p>
+            </div>
+            
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Seu usuário" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Sua senha" required>
+                </div>
+                
+                <button type="submit" class="btn-primary w-full py-3 text-white font-semibold rounded-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Entrar no Sistema
+                </button>
+            </form>
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">Problemas para acessar? Entre em contato com a administração.</p>
+            </div>
+        </div>
+
+        <!-- Tela de Cadastro (fica escondida) -->
+        <div id="register-screen" class="login-card p-8 w-full hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Criar Conta</h2>
+                <p class="text-gray-600">Preencha os dados para cadastrar</p>
+            </div>
+            <form id="register-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
+                    <input type="text" id="register-username" class="w-full px-4 py-3 border border-gray-300 rounded-lg" placeholder="Seu usuário" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                    <input type="password" id="register-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg" placeholder="Sua senha" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Função</label>
+                    <select id="register-role" class="w-full px-4 py-3 border border-gray-300 rounded-lg" required>
+                        <option value="" disabled selected>Selecione a função</option>
+                        <option value="Estudante">1 - Estudante</option>
+                        <option value="Equipe Pedagogica">2 - Equipe Pedagógica</option>
+                        <option value="Admin">3 - Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3 text-white font-semibold rounded-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Criar Conta
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <button id="show-login-btn" class="text-blue-600 hover:underline">Já tenho conta</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Principal -->
+        <div id="dashboard" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800" id="welcome-message">Bem-vindo!</h1>
+                <button id="logout-btn" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                </button>
+            </div>
+
+            <!-- Lista de Usuários (apenas para teste) -->
+            <div class="dashboard-card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4"><i class="fas fa-users text-blue-500 mr-2"></i>Usuários Cadastrados</h2>
+                <div id="lista-usuarios" class="space-y-3">
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-users text-3xl mb-2"></i>
+                        <p>Carregando lista de usuários...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cadastro de Novo Usuário -->
+            <div class="dashboard-card p-6 mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4"><i class="fas fa-user-plus text-green-500 mr-2"></i>Criar Novo Usuário</h2>
+                <form id="novo-usuario-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+                        <input type="text" id="new-username" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                        <input type="password" id="new-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                    </div>
+                    <button type="submit" class="btn-primary w-full py-2 text-white font-semibold rounded-lg">
+                        <i class="fas fa-save mr-2"></i>Cadastrar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+let currentUser = null;
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('login-form').addEventListener('submit', handleLogin);
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    document.getElementById('novo-usuario-form').addEventListener('submit', handleNovoUsuario);
+
+    // Novos eventos para alternar telas
+    document.getElementById('show-register-btn').addEventListener('click', () => {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('register-screen').classList.remove('hidden');
+    });
+    document.getElementById('show-login-btn').addEventListener('click', () => {
+        document.getElementById('register-screen').classList.add('hidden');
+        document.getElementById('login-screen').classList.remove('hidden');
+    });
+    document.getElementById('register-form').addEventListener('submit', handleRegister);
+});
+
+// Login
+async function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const res = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const text = await res.text();
+
+        if (text.includes('bem-sucedido')) {
+            showNotification('Login realizado com sucesso!', 'success');
+            // Redireciona para a tela do aluno
+            window.location.href = 'tala_aluno.html';
+        } else {
+            showNotification(text, 'error');
+        }
+    } catch (err) {
+        showNotification('Erro de conexão', 'error');
+    }
+}
+
+// Logout
+function handleLogout() {
+    currentUser = null;
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    showNotification('Logout realizado!', 'success');
+}
+
+// Mostrar Dashboard
+function showDashboard() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('welcome-message').textContent = `Bem-vindo, ${currentUser.username}!`;
+    loadUsers();
+}
+
+// Cadastrar novo usuário
+async function handleNovoUsuario(e) {
+    e.preventDefault();
+    const username = document.getElementById('new-username').value;
+    const password = document.getElementById('new-password').value;
+
+    try {
+        const res = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const text = await res.text();
+        showNotification(text, 'success');
+        loadUsers();
+        e.target.reset();
+    } catch (err) {
+        showNotification('Erro ao cadastrar usuário', 'error');
+    }
+}
+
+// Novo cadastro de usuário (registro)
+async function handleRegister(e) {
+    e.preventDefault();
+    const username = document.getElementById('register-username').value;
+    const password = document.getElementById('register-password').value;
+    const role = document.getElementById('register-role').value;
+
+    try {
+        const res = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, role })
+        });
+        const text = await res.text();
+        if (res.ok) {
+            showNotification(text, 'success');
+            e.target.reset();
+            // NÃO muda de tela!
+        } else {
+            showNotification(text, 'error');
+        }
+    } catch (err) {
+        showNotification('Erro ao cadastrar usuário', 'error');
+    }
+}
+
+// Listar usuários
+async function loadUsers() {
+    try {
+        const res = await fetch('http://localhost:3000/users');
+        const users = await res.json();
+        const container = document.getElementById('lista-usuarios');
+
+        if (users.length === 0) {
+            container.innerHTML = `<p class="text-gray-500 text-center py-4">Nenhum usuário cadastrado</p>`;
+        } else {
+            container.innerHTML = users.map(u => `<div class="p-2 border rounded">${u.username}</div>`).join('');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// Notificações
+function showNotification(message, type='info') {
+    const colors = { success:'bg-green-500', error:'bg-red-500', info:'bg-blue-500' };
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.className = `fixed top-4 right-4 text-white px-4 py-2 rounded shadow-lg ${colors[type]}`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 4000);
+}
+
+// Adiciona evento para o logo abrir tela de cadastro após login especial
+document.getElementById('logo-btn').addEventListener('click', async () => {
+    // Solicita credenciais
+    const usuario = prompt('Digite o usuário para acessar o cadastro:');
+    const senha = prompt('Digite a senha:');
+    if (usuario === 'Lucas' && senha === '1234') {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('register-screen').classList.remove('hidden');
+    } else {
+        showNotification('Credenciais inválidas para acessar o cadastro!', 'error');
+    }
+});
+
+// Remove botão "Criar Conta" da tela de login
+document.getElementById('show-register-btn').style.display = 'none';
+</script>
+</body>
+</html>
