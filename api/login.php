@@ -2,34 +2,30 @@
 header('Content-Type: application/json');
 require 'conn.php';
 
-// Receber dados do front-end
-$data = json_decode(file_get_contents("php://input"), true);
-
-if(!isset($data['email']) || !isset($data['password'])){
-    echo json_encode(["success" => false, "message" => "Email e senha são obrigatórios."]);
+$input = json_decode(file_get_contents('php://input'), true);
+if (!$input || !isset($input['email']) || !isset($input['password'])) {
+    echo json_encode(['success'=>false, 'message'=>'Email e senha são obrigatórios.']);
     exit;
 }
 
-$email = $data['email'];
-$password = $data['password'];
+$email = trim($input['email']);
+$pass  = $input['password'];
 
-// Buscar usuário
-$stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
-$stmt->execute(['email' => $email]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare('SELECT id, nome, email, senha, tipo FROM usuarios WHERE email = :email LIMIT 1');
+$stmt->execute(['email'=>$email]);
+$user = $stmt->fetch();
 
-if($user && password_verify($password, $user['senha'])){
-    // Sucesso
+if ($user && password_verify($pass, $user['senha'])) {
     echo json_encode([
-        "success" => true,
-        "user" => [
-            "id" => $user['id'],
-            "nome" => $user['nome'],
-            "email" => $user['email'],
-            "tipo" => $user['tipo']
+        'success' => true,
+        'user' => [
+            'id' => intval($user['id']),
+            'nome' => $user['nome'],
+            'email' => $user['email'],
+            'tipo' => $user['tipo']
         ]
     ]);
 } else {
-    echo json_encode(["success" => false, "message" => "Email ou senha incorretos."]);
+    echo json_encode(['success'=>false, 'message'=>'Email ou senha incorretos.']);
 }
 ?>
