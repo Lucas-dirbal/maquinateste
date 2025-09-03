@@ -29,14 +29,15 @@ db.run(`
 // Função para cadastrar usuário com função
 app.post('/register', async (req, res) => {
     const { username, password, role } = req.body;
-    if (!username || !password || !role) return res.status(400).send('Informe username, password e role.');
+    if (!username || !password) return res.status(400).send('Informe username e password.');
+    const userRole = role || 'Estudante';
 
     try {
         // Criptografar a senha
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const query = `INSERT INTO users (username, password, role) VALUES (?, ?, ?)`;
-        db.run(query, [username, hashedPassword, role], function(err) {
+        db.run(query, [username, hashedPassword, userRole], function(err) {
             if (err) return res.status(400).send('Usuário já existe ou erro no cadastro.');
             res.send(`Usuário cadastrado com sucesso! ID: ${this.lastID}`);
         });
@@ -58,7 +59,8 @@ app.post('/login', (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         if (!match) return res.status(400).send('Senha incorreta.');
 
-        res.send(`Login bem-sucedido! Bem-vindo, ${user.username}`);
+        // Retorna JSON com username e role
+        res.json({ success: true, username: user.username, role: user.role });
     });
 });
 
